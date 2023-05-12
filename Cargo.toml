@@ -1,2 +1,19 @@
-[workspace]
-members = ["crates/*"]
+[package]
+name = "apicast"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.71"
+env_logger = "0.10.0"
+log = "0.4.17"
+# wait this PR https://github.com/kurtbuilds/openapiv3/pull/1
+openapi = { version = "2.2.1", git = "https://github.com/charlzyx/openapiv3.git", package = "openapiv3-extended", features = [
+  "v2",
+] }
+regex = "1.8.1"
+serde = { version = "1.0.162", features = ["derive"] }
+serde_json = "1.0.96"
+serde_yaml = "0.9.21"

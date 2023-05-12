@@ -1,4 +1,4 @@
-# cast
-cast swagger.json -> api.d.ts
+# api
+cast OpenApi/Swagger.{json,yaml} -> api.d.ts
 
 ## WIP

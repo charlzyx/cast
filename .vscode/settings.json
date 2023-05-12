@@ -1,7 +1,3 @@
 {
-  "rust-analyzer.linkedProjects": [
-    "./crates/parser/Cargo.toml",
-    "./crates/parser/Cargo.toml",
-    "./crates/parser/Cargo.toml"
-  ]
+  "rust-analyzer.showUnlinkedFileNotification": false
 }
