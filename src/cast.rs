@@ -1,6 +1,7 @@
 pub mod cast {
     use openapi::*;
     use regex::Regex;
+    use serde_yaml::with;
     use std::vec;
 
     fn safe_name(name: &str) -> String {
@@ -241,7 +242,8 @@ pub mod cast {
 
     impl Castable for Operation {
         fn to_tds(&self) -> String {
-            let mut lines = vec![self.operation_id.to_owned().unwrap()];
+            // let mut lines = vec![self.operation_id.to_owned().unwrap()];
+            let mut lines = vec![];
             lines.push(": {\n".to_owned());
 
             let mut in_querys = vec![];
@@ -347,22 +349,27 @@ pub mod cast {
 
     impl Castable for PathItem {
         fn to_tds(&self) -> String {
-            let mut lines = vec![];
-            // let methods = ["get", "post", "patch", "delete"];
+            let mut lines = vec![": {".to_owned()];
+            let methods = ["get", "post", "patch", "delete"];
             let mut i = 0;
 
             [&self.get, &self.post, &self.patch, &self.delete]
                 .into_iter()
                 .for_each(|option| {
                     if let Some(operation) = option {
-                        // let method = methods[i];
+                        let mut with_method = String::from(methods[i]);
                         // lines.push([method.to_uppercase(), ":{".to_owned()].join(""));
-                        lines.push(operation.to_tds());
+                        with_method.push_str(operation.to_tds().as_str());
+                        // with_method.push_str(";");
+
+                        lines.push(with_method);
                         // lines.push("}".to_owned());
                     }
 
                     i = i + 1;
                 });
+
+            lines.push("}".to_owned());
 
             lines.join("\n")
         }
@@ -467,7 +474,8 @@ pub mod cast {
     impl Castable for OpenAPI {
         fn to_tds(&self) -> String {
             // components/schemas
-            let mut lines = vec!["declare namespace ApiDefs {".to_owned()];
+            // let mut lines = vec!["declare namespace ApiDefs {".to_owned()];
+            let mut lines = vec![];
             self.components.as_ref().map(|components| {
                 let schemas = &components.schemas;
                 for (name, schema) in schemas {
@@ -486,15 +494,18 @@ pub mod cast {
             });
 
             // paths
-            lines.push("export interface Paths {\n".to_owned());
+            lines.push("export interface paths {\n".to_owned());
 
-            self.paths.paths.iter().for_each(|(_req_path, path_item)| {
-                lines.push(path_item.to_tds());
+            self.paths.paths.iter().for_each(|(req_path, path_item)| {
+                let mut with_path = String::from(vec!["\"", req_path, "\""].join(""));
+                with_path.push_str(path_item.to_tds().as_str());
+                // with_path.push_str(";");
+                lines.push(with_path);
             });
 
             lines.push("}".to_owned());
             // finally
-            lines.push("}".to_owned());
+            // lines.push("}".to_owned());
             lines.join("\n")
         }
     }

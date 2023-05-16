@@ -24,9 +24,9 @@ fn main() {
     }
 
     run(vec![
-        // ("openapi.json", true),
+        ("openapi.json", true),
         // ("petstore.json", false),
-        ("swagger.json", false),
+        // ("swagger.json", false),
     ]);
 
     // fix_interface_name_all_of("export interface Pet NewPet & Error & { id: number & string");
